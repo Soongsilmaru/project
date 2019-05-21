@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 /*=================================================================*/
 
@@ -14,29 +15,33 @@
 
 int main()
 {
-	int i=0,j,l,map[30][30][5];      //map[세로][가로][페이지]
-
+	int i=0,j=0,l=0,stage;     //map[세로][가로][페이지]
+	char v[30],maparr[5][30][30];
 			/*맵 분리*/
 	FILE *mapfile;
 	mapfile = fopen("map","r");
-	for ( ;i<=5; ){	
-		for (l=0; l<=30; l++){
-			for (j=0; j<=30; j++){
-				fscanf(mapfile,"%c",&map[j][l][i]);
-				if (map[j][l][i]>=48 && map[j][l][i]<=57)
-					i++;}}}
-	for (l=0; l<=30; l++){
-                for (j=0; j<=30; j++){
-		 	printf("%c",map[j][l][1]);}}
-	printf("\n");
-	for (l=0; l<=30; l++){
-                for (j=0; j<=30; j++){
-                        printf("%c",map[j][l][2]);}}
-        printf("\n");
-	for (l=0; l<=30; l++){
-                for (j=0; j<=30; j++){
-                        printf("%c",map[j][l][3]);}}
-        printf("\n");
-
+	while (fscanf(mapfile,"%s",&v)!=EOF)
+	{
+		if (v[0]>='1' && v[0]<='5'){
+				stage=v[0]-49;
+				j=0;
+				continue;
+			}
+		else if (v[0]=='e')
+			break;
+		strcpy(maparr[stage][j], v);
+		j++;
+	}
+	for (i=0; i<5; i++){
+		for (j=0; j<=30; j++)
+		{
+    		for (l=0; l<=30; l++)
+			{
+				if (maparr[i][j][l]!='\0')
+					printf("%c",maparr[i][j][l]);
+			}
+			printf("\n");
+		}
+	}
 	return 0;
 }
