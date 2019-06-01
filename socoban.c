@@ -1,22 +1,28 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <termio.h>
 
 /*=================================================================*/
 
 void mapsizecheck();
 int mapcheck(int s,int a,int b);
+void display_help(void);
+void display_map(int);
+int getch(); 
 
 /*=================================================================*/
 
 char maparr[5][30][30];
-int mapsize[2][5], MAXSTAGE; //ì„¸ë¡œ=0 ê°€ë¡œ=1
+int mapsize[2][5], MAXSTAGE; //¼¼·Î=0 °¡·Î=1
 
 /*=================================================================*/
 int main()
 {
-	int i=0,stage=10,result,s=0;  //map[ë¼ìš´ë“œ][ì„¸ë¡œ][ê°€ë¡œ]
-	char v[30];
-			/*ë§µ ë¶„ë¦¬*/
+	system("clear");
+	int i=0,j=0,char_input,check=1,stage=10,result,s=0;  //map[¶ó¿îµå][¼¼·Î][°¡·Î]
+	char v[30], name[10];
+			/*¸Ê ºÐ¸®*/
 	FILE *mapfile;
 	mapfile = fopen("map","r");
 	while (fscanf(mapfile,"%s",&v)!=EOF)
@@ -26,14 +32,14 @@ int main()
 			stage=v[0]-49;
 			if (stage>=1 && stage <=4)
 			{
-			mapsize[0][stage-1]=i; //ë§µ ê°€ë¡œí¬ê¸° ì¸¡ì •1,2,3,4 ë¼ìš´ë“œ
+			mapsize[0][stage-1]=i; //¸Ê ¼¼·ÎÅ©±â ÃøÁ¤1,2,3,4 ¶ó¿îµå
 			}
 			i=0;
 			continue;
 		}
 		else if (v[0]=='e')
 		{
-			mapsize[0][stage]=i;      //ë§µ ê°€ë¡œí¬ê¸° ì¸¡ì • 5ë¼ìš´ë“œ
+			mapsize[0][stage]=i;      //¸Ê ¼¼·ÎÅ©±â ÃøÁ¤ 5¶ó¿îµå
 			break;
 		}
 		if (i==0)
@@ -42,7 +48,7 @@ int main()
 			{
 				if (v[s]=='\0')
 				{
-					mapsize[1][stage]=s;	//ë§µ ì„¸ë¡œí¬ê¸° ì¸¡ì •
+					mapsize[1][stage]=s;	//¸Ê °¡·ÎÅ©±â ÃøÁ¤
 					break;
 				}
 			}
@@ -52,22 +58,72 @@ int main()
 	}
 	MAXSTAGE=stage+1;
 /*=================================================================*/	
-	printf("ë§µ íŒŒì¼ ê²€ì‚¬ë¥¼ ì‹œìž‘í•©ë‹ˆë‹¤.\n");
+	printf("¸Ê ÆÄÀÏ °Ë»ç¸¦ ½ÃÀÛÇÕ´Ï´Ù.\n");
 	for (s=0;s<MAXSTAGE;s++)
 	{
 		result=mapcheck(s,mapsize[0][s],mapsize[1][s]);
 	if (result==0)
 		{
-			printf("stage %dì—ì„œ ë°•ìŠ¤ì˜ ê°œìˆ˜ì™€ ë³´ê´€ìž¥ì†Œì˜ ê°œìˆ˜ê°€ ê°™ì§€ì•ŠìŠµë‹ˆë‹¤.\n",s+1);
+			printf("stage %d¿¡¼­ ¹Ú½ºÀÇ °³¼ö¿Í º¸°üÀå¼ÒÀÇ °³¼ö°¡ °°Áö¾Ê½À´Ï´Ù.\n",s+1);
 			return 0;
 		}
 	else if (result==1)
 		printf("stage %d ok\n",s+1);
 	}
+/*=================================================================*/	
+	printf("input name : ");
+	scanf("%s", &name);
+	system("clear");
+	
+	while(check){
+		int input_char;
+		printf("   Hello %s\n\n", name);
+		display_map(1); //ÀÓ½Ã·Î ·¹º§ 1 Ãâ·Â.  
+			
+		char_input = getch();
+		system("clear"); //È­¸é Å¬¸®¾î 
+		switch (char_input){
+		case 'd':
+			display_help();
+			input_char = getch();
+			if(input_char=='d') { //´Ù½Ã d¸¦ ´©¸£¸é ¿ø·¡ È­¸éÀ¸·Î µ¹¾Æ°¡°Ô ÇÔ.		
+				system("clear");
+				break;
+			}
+		case 'e': //e¸¦ ´©¸£¸é ÇÁ·Î±×·¥ Á¾·á. ÆÄÀÏ Á¤º¸ ¼¼ÀÌºêÇÏ´Â ÇÔ¼ö Ãß°¡ ÇÊ¿äÇÔ. 
+			check=0;
+			break;
+		}
+	}		
+/*=================================================================*/	
+	system("clear");
+	return 0;
+	
 }
 		
 /*=================================================================*/
-int mapcheck(int s,int a,int b) //s=ìŠ¤í…Œì´ì§€ a=ì„¸ë¡œ, b=ê°€ë¡œ
+int getch(void){ //getch Á¤ÀÇ  
+    int ch;
+
+    struct termios buf;
+    struct termios save;
+
+    tcgetattr(0, &save);
+    buf = save;
+
+    buf.c_lflag&=~(ICANON|ECHO);
+    buf.c_cc[VMIN] = 1;
+    buf.c_cc[VTIME] = 0;
+
+    tcsetattr(0, TCSAFLUSH, &buf);
+
+    ch = getchar();
+    tcsetattr(0, TCSAFLUSH, &save);
+
+    return ch;
+ }
+/*=================================================================*/
+int mapcheck(int s,int a,int b) //s=½ºÅ×ÀÌÁö a=¼¼·Î, b=°¡·Î
 {
 	int result,i,j,target=0,box=0;
 	    for (i=0;i<a;i++)
@@ -88,3 +144,29 @@ int mapcheck(int s,int a,int b) //s=ìŠ¤í…Œì´ì§€ a=ì„¸ë¡œ, b=ê°€ë¡œ
 	return result;
 }	
 /*=================================================================*/
+
+void display_help(void){ //dÅ° ÀÔ·Â½Ã ¸í·É ³»¿ë º¸¿©ÁÜ. ³ªÁß¿¡ main ÇÔ¼ö¿¡¼­ if¹®À¸·Î ÇÔ¼ö »ç¿ë. 
+	printf("h(¿ÞÂÊ), j(¾Æ·¡), k(À§), l(¿À¸¥ÂÊ)\n"); //ÄÚµåÀÇ °¡µ¶¼ºÀ» À§ÇØ ÇÑÁÙ¾¿ ¶ç¿ò. 
+	printf("u(undo)\n");
+	printf("r(replay)\n");
+	printf("n(new)\n");
+	printf("e(exit)\n");
+	printf("s(save)\n");
+	printf("f(file load)\n");
+	printf("d(display help)\n");
+	printf("t(top)\n");
+	
+	printf("\n(Command) d");
+}
+
+/*=================================================================*/
+
+void display_map(int level){
+	int i, j;
+	for(i=0;i<=mapsize[0][level-1];i++){ //1¹ø ¸Ê Ãâ·Â 
+			for(j=0;j<=mapsize[1][level-1];j++){
+				printf("%c", maparr[level-1][i][j]);
+			}
+			printf("\n");
+		}
+}
