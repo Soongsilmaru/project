@@ -171,22 +171,22 @@ void key_options(int level){
 	case 'h':
 		delta_x=-1;
 		move_player(level);
-		movecount++
+		movecount++;
 		return;
 	case 'j':
 		delta_y=1;
 		move_player(level);
-		movecount++
+		movecount++;
 		return;
 	case 'k':
 		delta_y=-1;
 		move_player(level);
-		movecount++
+		movecount++;
 		return;
 	case 'l':
 		delta_x=1;
 		move_player(level);
-		movecount++
+		movecount++;
 		return;
 	case 'd':
 		display_help();
