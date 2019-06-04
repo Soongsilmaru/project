@@ -13,6 +13,8 @@ int getch();
 void move_player(int);
 void key_options(int);
 int map();
+int printmapcheck();
+int printname();
 
 /*=================================================================*/
 
@@ -27,6 +29,8 @@ int check=1;
 int main()
 {
 	map();
+	printmapcheck();
+	printname();
 	return 0;
 }
 
@@ -70,7 +74,10 @@ int map()
 		i++;
 	}
 	MAXSTAGE=stage+1;
-/*=================================================================*/	
+}
+
+int printmapcheck()
+{
 	printf("맵 파일 검사를 시작합니다.\n");
 	for (s=0;s<MAXSTAGE;s++)
 	{
@@ -83,7 +90,10 @@ int map()
 	else if (result==1)
 		printf("stage %d ok\n",s+1);
 	}
-/*=================================================================*/	
+}
+
+int printname()
+{
 	printf("input name : ");
 	scanf("%s", &name);
 	system("clear");
