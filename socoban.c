@@ -12,11 +12,12 @@ void display_map(int);
 int getch(); 
 void move_player(int);
 void key_options(int);
+int map();
 
 /*=================================================================*/
 
 char maparr[5][30][30];
-int mapsize[2][5], MAXSTAGE; //¼¼·Î=0 °¡·Î=1
+int mapsize[2][5], MAXSTAGE; //ì„¸ë¡œ=0 ê°€ë¡œ=1
 int player_x, player_y;
 int sto_x, sto_y;
 int delta_x=0, delta_y=0;
@@ -25,10 +26,16 @@ int check=1;
 /*=================================================================*/
 int main()
 {
+	map();
+	return 0;
+}
+
+int map()
+{
 	system("clear");
-	int i=0, j=0, stage=10, result, s=0;  //map[¶ó¿îµå][¼¼·Î][°¡·Î]
+	int i=0, j=0, stage=10, result, s=0;  //map[ë¼ìš´ë“œ][ì„¸ë¡œ][ê°€ë¡œ]
 	char v[30], name[10];
-			/*¸Ê ºĞ¸®*/
+			/*ë§µ ë¶„ë¦¬*/
 	FILE *mapfile;
 	mapfile = fopen("map","r");
 	while (fscanf(mapfile,"%s",&v)!=EOF)
@@ -38,14 +45,14 @@ int main()
 			stage=v[0]-49;
 			if (stage>=1 && stage <=4)
 			{
-			mapsize[0][stage-1]=i; //¸Ê ¼¼·ÎÅ©±â ÃøÁ¤1,2,3,4 ¶ó¿îµå
+			mapsize[0][stage-1]=i; //ë§µ ì„¸ë¡œí¬ê¸° ì¸¡ì •1,2,3,4 ë¼ìš´ë“œ
 			}
 			i=0;
 			continue;
 		}
 		else if (v[0]=='e')
 		{
-			mapsize[0][stage]=i;      //¸Ê ¼¼·ÎÅ©±â ÃøÁ¤ 5¶ó¿îµå
+			mapsize[0][stage]=i;      //ë§µ ì„¸ë¡œí¬ê¸° ì¸¡ì • 5ë¼ìš´ë“œ
 			break;
 		}
 		if (i==0)
@@ -54,7 +61,7 @@ int main()
 			{
 				if (v[s]=='\0')
 				{
-					mapsize[1][stage]=s;	//¸Ê °¡·ÎÅ©±â ÃøÁ¤
+					mapsize[1][stage]=s;	//ë§µ ê°€ë¡œí¬ê¸° ì¸¡ì •
 					break;
 				}
 			}
@@ -64,13 +71,13 @@ int main()
 	}
 	MAXSTAGE=stage+1;
 /*=================================================================*/	
-	printf("¸Ê ÆÄÀÏ °Ë»ç¸¦ ½ÃÀÛÇÕ´Ï´Ù.\n");
+	printf("ë§µ íŒŒì¼ ê²€ì‚¬ë¥¼ ì‹œì‘í•©ë‹ˆë‹¤.\n");
 	for (s=0;s<MAXSTAGE;s++)
 	{
 		result=mapcheck(s,mapsize[0][s],mapsize[1][s]);
 	if (result==0)
 		{
-			printf("stage %d¿¡¼­ ¹Ú½ºÀÇ °³¼ö¿Í º¸°üÀå¼ÒÀÇ °³¼ö°¡ °°Áö¾Ê½À´Ï´Ù.\n",s+1);
+			printf("stage %dì—ì„œ ë°•ìŠ¤ì˜ ê°œìˆ˜ì™€ ë³´ê´€ì¥ì†Œì˜ ê°œìˆ˜ê°€ ê°™ì§€ì•ŠìŠµë‹ˆë‹¤.\n",s+1);
 			return 0;
 		}
 	else if (result==1)
@@ -84,20 +91,17 @@ int main()
 	stage=1;
 	
 	while(check){
-		
 		printf("   Hello %s\n\n", name);
-		display_map(stage); //ÀÓ½Ã·Î ·¹º§ 1 Ãâ·Â.  
+		display_map(stage); //ì„ì‹œë¡œ ë ˆë²¨ 1 ì¶œë ¥.  
 		key_options(stage);	
-		
 		}		
-/*=================================================================*/	
+	
 	system("clear");
 	return 0;
-	
 }
 		
 /*=================================================================*/
-int getch(void){ //getch Á¤ÀÇ  
+int getch(void){ //getch ì •ì˜  
     int ch;
 
     struct termios buf;
@@ -118,7 +122,7 @@ int getch(void){ //getch Á¤ÀÇ
     return ch;
  }
 /*=================================================================*/
-int mapcheck(int s, int a,int b) //s=½ºÅ×ÀÌÁö a=¼¼·Î, b=°¡·Î
+int mapcheck(int s, int a,int b) //s=ìŠ¤í…Œì´ì§€ a=ì„¸ë¡œ, b=ê°€ë¡œ
 {
 	int result,i,j,target=0,box=0;
 	    for (i=0;i<a;i++)
@@ -144,7 +148,7 @@ void key_options(int level){
 	int char_input, input_char;
 	delta_x=0, delta_y=0;
 	char_input = getch();
-	system("clear"); //È­¸é Å¬¸®¾î 
+	system("clear"); //í™”ë©´ í´ë¦¬ì–´ 
 	switch (char_input){
 	case 'h':
 		delta_x=-1;
@@ -165,11 +169,11 @@ void key_options(int level){
 	case 'd':
 		display_help();
 		input_char = getch();
-		if(input_char=='\0') { //¿£ÅÍ¸¦ ´©¸£¸é ¿ø·¡ È­¸éÀ¸·Î µ¹¾Æ°¡°Ô ÇÔ.		
+		if(input_char=='\0') { //ì—”í„°ë¥¼ ëˆ„ë¥´ë©´ ì›ë˜ í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ê²Œ í•¨.		
 			system("clear");
 			return;
 		}
-	case 'e': //e¸¦ ´©¸£¸é ÇÁ·Î±×·¥ Á¾·á. ÆÄÀÏ Á¤º¸ ¼¼ÀÌºêÇÏ´Â ÇÔ¼ö Ãß°¡ ÇÊ¿äÇÔ. 
+	case 'e': //eë¥¼ ëˆ„ë¥´ë©´ í”„ë¡œê·¸ë¨ ì¢…ë£Œ. íŒŒì¼ ì •ë³´ ì„¸ì´ë¸Œí•˜ëŠ” í•¨ìˆ˜ ì¶”ê°€ í•„ìš”í•¨. 
 		check=0;
 		return;
 	}
@@ -178,8 +182,8 @@ void key_options(int level){
 
 /*=================================================================*/
 
-void display_help(void){ //dÅ° ÀÔ·Â½Ã ¸í·É ³»¿ë º¸¿©ÁÜ. ³ªÁß¿¡ main ÇÔ¼ö¿¡¼­ if¹®À¸·Î ÇÔ¼ö »ç¿ë. 
-	printf("h(¿ŞÂÊ), j(¾Æ·¡), k(À§), l(¿À¸¥ÂÊ)\n"); //ÄÚµåÀÇ °¡µ¶¼ºÀ» À§ÇØ ÇÑÁÙ¾¿ ¶ç¿ò. 
+void display_help(void){ //dí‚¤ ì…ë ¥ì‹œ ëª…ë ¹ ë‚´ìš© ë³´ì—¬ì¤Œ. ë‚˜ì¤‘ì— main í•¨ìˆ˜ì—ì„œ ifë¬¸ìœ¼ë¡œ í•¨ìˆ˜ ì‚¬ìš©. 
+	printf("h(ì™¼ìª½), j(ì•„ë˜), k(ìœ„), l(ì˜¤ë¥¸ìª½)\n"); //ì½”ë“œì˜ ê°€ë…ì„±ì„ ìœ„í•´ í•œì¤„ì”© ë„ì›€. 
 	printf("u(undo)\n");
 	printf("r(replay)\n");
 	printf("n(new)\n");
@@ -196,7 +200,7 @@ void display_help(void){ //dÅ° ÀÔ·Â½Ã ¸í·É ³»¿ë º¸¿©ÁÜ. ³ªÁß¿¡ main ÇÔ¼ö¿¡¼­ if¹
 
 void display_map(int level){
 	int i, j;
-	for(i=0;i<=mapsize[0][level-1];i++){ //level¹ø ¸Ê Ãâ·Â 
+	for(i=0;i<=mapsize[0][level-1];i++){ //levelë²ˆ ë§µ ì¶œë ¥ 
 			for(j=0;j<=mapsize[1][level-1];j++){
 				if(maparr[level-1][i][j]=='@'){
 					player_x=j;
