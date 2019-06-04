@@ -24,7 +24,7 @@ int player_x, player_y;
 int sto_x, sto_y;
 int delta_x=0, delta_y=0;
 int check=1;
-
+int movecount=0;
 /*=================================================================*/
 
 int main()
@@ -171,18 +171,22 @@ void key_options(int level){
 	case 'h':
 		delta_x=-1;
 		move_player(level);
+		movecount++
 		return;
 	case 'j':
 		delta_y=1;
 		move_player(level);
+		movecount++
 		return;
 	case 'k':
 		delta_y=-1;
 		move_player(level);
+		movecount++
 		return;
 	case 'l':
 		delta_x=1;
 		move_player(level);
+		movecount++
 		return;
 	case 'd':
 		display_help();
@@ -228,6 +232,7 @@ void display_map(int level){
 			}
 			printf("\n");
 		}
+	printf("움직인 횟수: %d", movecount);
 }
 
 /*=================================================================*/
