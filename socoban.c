@@ -78,6 +78,8 @@ int map()
 
 int printmapcheck()
 {
+	int i=0, j=0, stage=10, result, s=0;  //map[라운드][세로][가로]
+	char v[30], name[10];
 	printf("맵 파일 검사를 시작합니다.\n");
 	for (s=0;s<MAXSTAGE;s++)
 	{
@@ -94,6 +96,8 @@ int printmapcheck()
 
 int printname()
 {
+	int i=0, j=0, stage=10, result, s=0;  //map[라운드][세로][가로]
+	char v[30], name[10];
 	printf("input name : ");
 	scanf("%s", &name);
 	system("clear");
