@@ -20,9 +20,9 @@ int printname();
 
 char maparr[5][30][30]; //maparr[라운드][세로][가로]
 int mapsize[2][5], MAXSTAGE; //세로=0 가로=1
-int player_x, player_y;
+int player_x, player_y, sto_x[30]={0},sto_y[30]={0};
 int delta_x=0, delta_y=0;
-int check=1;
+int check=1,i=0;
 int movecount=0;
 
 /*=================================================================*/
@@ -239,8 +239,22 @@ void display_map(int level){
 /*=================================================================*/
 
 void move_player(int level)
-{
-	int sto_x, sto_y;	
+{	
+	int j;
+	
+	if (maparr[level-1][player_y+delta_y][player_x+delta_x]=='#')
+		return;
+	for(j=0;j<=i;j++)
+	{	
+		if (sto_x[j]==player_x && sto_y[j]==player_y)
+		{
+			maparr[level-1][player_y][player_x]='O';
+			break;
+		}
+		else
+		maparr[level-1][player_y][player_x]='.';
+	}
+
 	if(maparr[level-1][player_y+delta_y][player_x+delta_x]=='$') 
 	{
 		if (maparr[level-1][player_y+delta_y*2][player_x+delta_x*2]=='#')
@@ -256,22 +270,17 @@ void move_player(int level)
 		{
 			maparr[level-1][player_y+delta_y*2][player_x+delta_x*2]='$';
 			maparr[level-1][player_y+delta_y][player_x+delta_x]='.';
+				sto_x[i]=player_x+delta_x*2;
+				sto_y[i]=player_y+delta_y*2;
+				i++;
 		}
 	}
-	if (maparr[level-1][player_y+delta_y][player_x+delta_x]=='#')
-		return;
-
-	if (sto_x==player_x&&sto_y==player_y)
-	{
-		maparr[level-1][player_y][player_x]='O';
-	}
-	else 
-		maparr[level-1][player_y][player_x]='.';
-
+	
 	if(maparr[level-1][player_y+delta_y][player_x+delta_x]=='O')
 	{
-		sto_x=player_x+delta_x;
-		sto_y=player_y+delta_y;
+		sto_x[i]=player_x+delta_x;
+		sto_y[i]=player_y+delta_y;
+		i++;
 	}
 
 	maparr[level-1][player_y+delta_y][player_x+delta_x]='@';
