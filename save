@@ -1,0 +1,23 @@
+void save(int level){
+	FILE *SAVE;
+	SAVE=fopen("sokoban","w");
+	int i, j;
+	
+	fprintf(SAVE,"name\n^%s\n", name);
+	fprintf(SAVE,"level\n%d\n", level); //level 저장 
+	fprintf(SAVE,"Map\n");
+	for(i=0;i<mapsize[0][level-1];i++){ //level번 맵 현재상태 저장 
+			for(j=0;j<=mapsize[1][level-1];j++){
+				fprintf(SAVE,"%c", maparr[level-1][i][j]);
+			}
+			fprintf(SAVE,"\n");
+		}
+	fprintf(SAVE,"end\n");
+
+	fprintf(SAVE,"movecount\n%d\n", movecount[level-1]); //음직인 횟수 저장
+	fprintf(SAVE,"undocount\n%d\n", undo_count[level-1]); //언도 횟수 저장 
+	
+	fprintf(SAVE,"e");
+	fclose(SAVE);
+	return;
+}
