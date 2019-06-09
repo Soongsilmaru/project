@@ -44,6 +44,7 @@ int main() // 메인 함수, 맵 출력 시작
     map();
     printmapcheck();
     printname();
+	printf("\n\n\n S E E  Y O U %s...\n\n\n",name);
     return 0;
 }
 
@@ -55,7 +56,7 @@ int map() //맵 출력해주는 함수
     char v[30];
             /*맵 분리*/
     FILE *mapfile;
-    mapfile = fopen("map","r"); //맵 파일을 불러와줌
+    mapfile = fopen("map.txt","r"); //맵 파일을 불러와줌
     while (fscanf(mapfile,"%s",&v)!=EOF) //맵파일을 끝까지 읽을 때까지
     {
         if (v[0]>='1' && v[0]<='5') //1~5단계
@@ -443,6 +444,12 @@ int levelupcheck(int level){ //상자가 주어진 곳에 다 넣어졌을 때 �
         y=sto_y[level-1][i];
         if(maparr[level-1][y][x]!='$') return 0;
     }
+	if (stage==MAXSTAGE)
+	{
+		system("clear");
+		printf("\n\n\n C L E A R ! \n\n\n");
+		exit(0);
+	}
     return 1;
 }
 
