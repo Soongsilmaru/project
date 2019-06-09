@@ -4,7 +4,6 @@
 #include <termio.h>
 #include <ctype.h>
 
-
 /*================================함수=============================*/
 
 void mapsizecheck();
@@ -29,6 +28,7 @@ int mapsize[2][5], MAXSTAGE; //세로=0 가로=1
 char name[11];
 int player_x, player_y, sto_x[5][30]={0},sto_y[5][30]={0}, stonumber[5]={0};
 int old_x, old_y;
+int stage;
 int delta_x=0, delta_y=0;
 int check=1,i=0;
 int movecount[5]={0};
@@ -44,7 +44,6 @@ int main()
 	map();
 	printmapcheck();
 	printname();
-	printf("\n\n\n    S E E    Y O U    %s. . . .\n\n\n",name);
 	return 0;
 }
 
@@ -106,14 +105,14 @@ int printmapcheck()
 			return 0;
 		}
 	else if (result==1)
-		printf("stage %d....ok\n",s+1);
+		printf("stage %d ok\n",s+1);
 	}
 }
 
 /*=================================================================*/
 int printname()
 {
-	int n=0,stage=10;
+	int n=0;
 	char v[30];
 	while (n==0)
 	n=Namecheck();
@@ -123,7 +122,7 @@ int printname()
 	
 	while(check){
 		printf("   Hello %s\n\n", name);
-		display_map(stage); //임시로 레벨 1 출력.  
+		display_map(stage); 
 		key_options(stage);
 		stage=stage+levelupcheck(stage);
 		}		
@@ -192,9 +191,11 @@ int mapcheck(int s, int a,int b) //s=스테이지 a=세로, b=가로
           for (j=0;j<b;j++)
           {
               if (maparr[s][i][j]=='O'){
-				  sto_x[s][target]=j;
-				  sto_y[s][target]=i;
-                  target++;
+                  sto_x[s][target]=j;
+                  sto_y[s][target]=i;
+                 // printf("sto_x[%d][%d]=%d\n",s,target,j);
+                 // printf("sto_y[%d][%d]=%d\n",s,target,i);
+				  target++;
               }
               else if (maparr[s][i][j]=='$')
                   box++;
@@ -244,6 +245,19 @@ void key_options(int level){
 		if(if_box_moved) undo_boxing=1;
 		move_player(level);
 		return;
+	case 'r':
+		map();
+		return;
+	case 'n':
+		for (int k=0; k<=4; k++)
+		{
+			movecount[k]=0;
+			undo_count[k]=0;
+		}
+		stage=0;
+		map();
+		save(level);
+		return;
 	case 'd':
 		display_help();
 		while(1){
@@ -261,7 +275,6 @@ void key_options(int level){
 		return;
 	case 'e': //e를 누르면 프로그램 종료. 파일 정보 세이브하는 함수 추가 필요함. 
 		check=0;
-		system("clear");
 		return;
 	}
 	
@@ -279,7 +292,7 @@ void display_help(void){ //d키 입력시 명령 내용 보여줌. 나중에 mai
 	printf("f(file load)\n");
 	printf("d(display help)\n");
 	printf("t(top)\n");
-	
+	printf("\nEnter 입력 시 게임으로 되돌아감");
 	printf("\n(Command) d");
 }
 
@@ -375,6 +388,7 @@ void save(int level){
 	fprintf(SAVE,"undocount\n%d\n", undo_count[level-1]); //언도 횟수 저장 
 	
 	fprintf(SAVE,"e");
+	fclose(SAVE);
 	return;
 }
 
@@ -409,6 +423,8 @@ void load(){
 			fscanf(LOAD,"%d",&undo_count[level]);
 		}
 	}
+	stage=level+1;
+	fclose(LOAD);
 }
 
 /*=================================================================*/
@@ -418,8 +434,11 @@ int levelupcheck(int level){
 	for(i=0;i<stonumber[level-1];i++){
 		x=sto_x[level-1][i];
 		y=sto_y[level-1][i];
-		if(maparr[level-1][y][x]!='$') 
-			return 0;
+		if(maparr[level-1][y][x]!='$') return 0;
 	}
 	return 1;
 }
+
+/*=================================================================*/
+
+
