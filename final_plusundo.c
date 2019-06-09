@@ -266,6 +266,7 @@ void key_options(int level){ //사용자에게 입력받은 키를 정의해주는 함수
         save(level);
         return;
     case 'f': //sokoban 파일에서 저장된 내용을 읽어 save 시점부터 이어서 게임하게 해줌
+    	undocheck=0;
         load();
         return;
     case 'e': //e를 누르면 프로그램 종료.
