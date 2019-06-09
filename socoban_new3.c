@@ -28,6 +28,7 @@ int mapsize[2][5], MAXSTAGE; //세로=0 가로=1
 char name[11];
 int player_x, player_y, sto_x[5][30]={0},sto_y[5][30]={0}, stonumber[5]={0};
 int old_x, old_y;
+int stage;
 int delta_x=0, delta_y=0;
 int check=1,i=0;
 int movecount[5]={0};
@@ -111,7 +112,7 @@ int printmapcheck()
 /*=================================================================*/
 int printname()
 {
-	int i=0, j=0, stage=10, result, s=0, max=0;
+	int i=0, j=0, result, s=0, max=0;
 	char v[30];
 	Namecheck();
 	system("clear");
@@ -120,7 +121,7 @@ int printname()
 	
 	while(check){
 		printf("   Hello %s\n\n", name);
-		display_map(stage); //임시로 레벨 1 출력.  
+		display_map(stage); 
 		key_options(stage);
 		stage=stage+levelupcheck(stage);
 		}		
@@ -372,6 +373,7 @@ void save(int level){
 	fprintf(SAVE,"undocount\n%d\n", undo_count[level-1]); //언도 횟수 저장 
 	
 	fprintf(SAVE,"e");
+	fclose(SAVE);
 	return;
 }
 
@@ -406,6 +408,8 @@ void load(){
 			fscanf(LOAD,"%d",&undo_count[level]);
 		}
 	}
+	stage=level+1;
+	fclose(LOAD);
 }
 
 /*=================================================================*/
@@ -419,3 +423,7 @@ int levelupcheck(int level){
 	}
 	return 1;
 }
+
+/*=================================================================*/
+
+
