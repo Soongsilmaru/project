@@ -232,7 +232,7 @@ void key_options(int level){ //사용자에게 입력받은 키를 정의해주는 함수
         move_player(level);
         return;
     case 'u': //undo 실행
-        if(undo_count[level-1]>=5||old_x==0||old_y==0) return;//최대 5번까지만 가능
+        if(undo_count[level-1]>=5||old_x[0]==0||old_y[0]==0) return;//최대 5번까지만 가능
 		undocheck++;
 		undo_count[level-1]++;
 		delta_x=old_x[undocheck-1]-player_x;//이전 위치에서 플레이어 위치를 빼줌. (위치 초기화
