@@ -1,0 +1,33 @@
+void load(){
+	char v[30];
+	int i=0, level;
+	FILE *LOAD;
+	LOAD=fopen("sokoban","r");
+	while(fscanf(LOAD,"%s",&v)!=EOF){
+		if(v[0]=='n'){
+			fscanf(LOAD,"%c",&v);
+			fscanf(LOAD,"%c",&v);
+			fscanf(LOAD,"%s",&name);
+		}
+		if(v[0]=='l'){
+			fscanf(LOAD,"%s",&v);
+			level=v[0]-'1';
+		}
+		if(v[0]=='M'){
+			while(1){
+				fscanf(LOAD,"%s",&v);
+				if(v[0]=='e') break;
+				strcpy(maparr[level][i], v);
+				i++;
+			} 
+		}
+		if(v[0]=='m'){
+			fscanf(LOAD,"%d",&movecount[level]);
+		}
+		if(v[0]=='u'){
+			fscanf(LOAD,"%d",&undo_count[level]);
+		}
+	}
+	stage=level+1;
+	fclose(LOAD);
+}
