@@ -245,12 +245,17 @@ void key_options(int level){
 		move_player(level);
 		return;
 	case 'r':
-	for (int k=0; k<=4; k++)
-	{
-		movecount[k] = 0;
-		undo_count[k] = 0;
 		map();
-	}
+		return;
+	case 'n':
+		for (int k=0; k<=4; k++)
+		{
+			movecount[k]=0;
+			undo_count[k]=0;
+		}
+		stage=0;
+		map();
+		save(level);
 		return;
 	case 'd':
 		display_help();
@@ -436,3 +441,4 @@ int levelupcheck(int level){
 /*=================================================================*/
 
 
+v
